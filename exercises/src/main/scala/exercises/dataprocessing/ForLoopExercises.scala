@@ -15,7 +15,7 @@ object ForLoopExercises {
   // such as size(List(2,5,1,8)) == 4
   // and     size(Nil) == 0
   def size[A](items: List[A]): Int =
-    ???
+    items.length
 
   // b. Implement `min` using a mutable state and a for loop
   // such as min(List(2,5,1,8)) == Some(1)
@@ -23,8 +23,20 @@ object ForLoopExercises {
   // Note: Option is an enumeration with two values:
   // * Some when there is a value and
   // * None when there is no value (a bit like null)
-  def min(numbers: List[Int]): Option[Int] =
-    ???
+  def min(numbers: List[Int]): Option[Int] = {
+
+    if(!numbers.isEmpty ){
+      var mini=numbers.head;
+      for(number<- numbers){
+        if(number<= mini){
+          mini=number
+        }
+      }
+      Some(mini)
+    }
+    else  None
+
+  }
 
   // c. Implement `wordCount` using a mutable state and a for loop.
   // `wordCount` compute how many times each word appears in a `List`
@@ -32,13 +44,28 @@ object ForLoopExercises {
   // and     wordCount(Nil) == Map.empty
   // Note: You can lookup an element in a `Map` with the method `get`
   // and you can upsert a value using `updated`
-  def wordCount(words: List[String]): Map[String, Int] =
-    ???
+  def wordCount(words: List[String]): Map[String, Int] = {
+    var frequencies=Map.empty[String,Int]
+
+    for (word <- words) {
+      frequencies.get(word) match {
+        case Some(frequency) => frequencies= frequencies.updated(word,frequency+1)
+        case None => frequencies=frequencies.updated(word,1)
+      }
+
+    }
+    frequencies
+  }
 
   // d. `sum`, `size`, `min` and `wordCount` are quite similar.
   // Could you write a higher-order function that captures this pattern?
   // How would you call it?
-  def pattern = ???
+  def pattern[From ,To](items:List[From],defaultValue:To)(combine:(To,From)=>To):To = {
+    var state=defaultValue
+    for(item <- items) state = combine(state,item)
+
+    state
+  }
 
   // e. Refactor `sum`, `size`, `min` and `wordCount` using the higher-order
   // function you defined above.
